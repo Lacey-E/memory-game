@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SingleCard from './component/SingleCard'
 import './App.css'
 
@@ -14,11 +14,8 @@ const cardImages = [
 function App() {
   const [cards, setCards] = useState([])
   const [turns, setTurns] = useState(0)
-
-
-  const handleChoice = (card) => {
-    console.log(card)
-  }
+  const [choiceOne, setChoiceOne] = useState(null)
+  const [choiceTwo, setChoiceTwo] = useState(null)
 
   // shuffle cards for new game
   const shuffleCards = () => {
@@ -29,16 +26,56 @@ function App() {
     setCards(shuffledCards)
     setTurns(0)
   }
+ 
 
-  console.log(cards, turns)
+ // Handle choice
+ const handleChoice = (card) => {
+ choiceOne ? setChoiceTwo(card) : setChoiceOne(card)
+}
+  
+
+//Compare 2 selected cards
+useEffect(() => {
+
+  if (choiceOne && choiceTwo) {
+    if (choiceOne.src === choiceTwo.src) {
+      console.log('Those cards match')
+      resetTurn()
+    } else {
+      console.log('Those cards do not match')
+      resetTurn()
+    }
+  }
+}, [choiceOne, choiceTwo])
+
+
+//Reset Choices & increase turn
+const resetTurn = () => {
+  setChoiceOne(null)
+  setChoiceTwo(null)
+  setTurns(prevTurns => prevTurns + 1)
+}
+
+
+
+
 
   return (
     <div className="App">
-      <h1>Magic Match</h1>
-      <button onClick={shuffleCards}>New Game</button>  
+    <h1>Magic Match</h1>
+    <button onClick={shuffleCards}>New Game</button>
 
-      <SingleCard cards={cards} handleChoice={handleChoice}/>
+    <div className="card-grid">
+      {cards.map(card => (
+        <SingleCard 
+          key={card.id}
+          card={card}
+          handleChoice={handleChoice}
+        />
+      ))}
     </div>
+
+  </div>
 
   );
 }
