@@ -3,12 +3,12 @@ import SingleCard from './component/SingleCard'
 import './App.css'
 
 const cardImages = [
-  { "src": "/img/helmet-1.png", matched: false },
-  { "src": "/img/potion-1.png",  matched: false },
-  { "src": "/img/ring-1.png",  matched: false },
-  { "src": "/img/scroll-1.png",  matched: false },
-  { "src": "/img/shield-1.png",  matched: false },
-  { "src": "/img/sword-1.png",  matched: false }
+  { "src": "/img/Image001.jpg", matched: false },
+  { "src": "/img/Image003.jpg",  matched: false },
+  { "src": "/img/Image004.jpg",  matched: false },
+  { "src": "/img/Image005.jpg",  matched: false },
+  { "src": "/img/Image006.jpg",  matched: false },
+  { "src": "/img/Image007.jpg",  matched: false }
 ]
 
 function App() {
@@ -16,6 +16,8 @@ function App() {
   const [turns, setTurns] = useState(0)
   const [choiceOne, setChoiceOne] = useState(null)
   const [choiceTwo, setChoiceTwo] = useState(null)
+const [disabled, setDisabled] = useState(false)
+
 
   // shuffle cards for new game
   const shuffleCards = () => {
@@ -38,22 +40,32 @@ function App() {
 useEffect(() => {
 
   if (choiceOne && choiceTwo) {
+    setDisabled(true)
     if (choiceOne.src === choiceTwo.src) {
-      console.log('Those cards match')
+     setCards(prevCards => {
+      return prevCards.map(card => {
+        if (card.src === choiceOne.src) {
+          return {...card, matched: true}
+         } else {
+          return card
+         }
+      })
+     })
       resetTurn()
     } else {
-      console.log('Those cards do not match')
-      resetTurn()
+     setTimeout(() => resetTurn(), 500) 
     }
   }
 }, [choiceOne, choiceTwo])
 
+console.log(cards)
 
 //Reset Choices & increase turn
 const resetTurn = () => {
   setChoiceOne(null)
   setChoiceTwo(null)
   setTurns(prevTurns => prevTurns + 1)
+  setDisabled(false)
 }
 
 
@@ -62,7 +74,7 @@ const resetTurn = () => {
 
   return (
     <div className="App">
-    <h1>Magic Match</h1>
+    <h1>Hero Match</h1>
     <button onClick={shuffleCards}>New Game</button>
 
     <div className="card-grid">
@@ -71,6 +83,8 @@ const resetTurn = () => {
           key={card.id}
           card={card}
           handleChoice={handleChoice}
+          flipped={card === choiceOne || card === choiceTwo || card.matched}
+          disabled ={disabled}       
         />
       ))}
       
