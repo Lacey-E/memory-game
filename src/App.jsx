@@ -76,6 +76,7 @@ const resetTurn = () => {
     <div className="App">
     <h1>Hero Match</h1>
     <button onClick={shuffleCards}>New Game</button>
+    <h2> Turns {turns}</h2>
 
     <div className="card-grid">
       {cards.map(card => (
