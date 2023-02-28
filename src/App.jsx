@@ -58,7 +58,7 @@ useEffect(() => {
   }
 }, [choiceOne, choiceTwo])
 
-console.log(cards)
+
 
 //Reset Choices & increase turn
 const resetTurn = () => {
